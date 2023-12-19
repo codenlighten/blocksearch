@@ -78,23 +78,23 @@
         right: 20px;
         padding: 10px 20px;
         border-radius: 4px;
-        border: #0056b3 solid 1px;
+        border: none;
         cursor: pointer;
         transition: background-color 0.3s;
         background-color: #333;
         color: white;
       }
 
-      /* Light Theme */
+      /* Light Theme Inspired by the Image */
       :root {
-        --background-color: #f4f4f4;
-        --text-color: #333;
-        --header-background: #007bff;
-        --header-text: white;
-        --button-background: #28a745;
-        --button-hover-background: #218838;
-        --results-background: white;
-        --transaction-highlight: #6c757d;
+        --background-color: #e4ebe5; /* Soft green background */
+        --text-color: #3a3d40; /* Dark gray text to ensure readability */
+        --header-background: #798867; /* Muted green for the header */
+        --header-text: #fff; /* White text for contrast */
+        --button-background: #a0ac97; /* Soft green for buttons */
+        --button-hover-background: #8c977d; /* Slightly darker green for button hover state */
+        --results-background: #fff; /* White background for results for clarity */
+        --transaction-highlight: #b6c2b7; /* Light green for transaction highlights */
       }
       body {
         background-color: var(--background-color);
@@ -118,16 +118,16 @@
         color: var(--transaction-highlight);
       }
 
-      /* Dark Theme */
+      /* Dark Theme Inspired by the Image */
       .dark-mode {
-        --background-color: #121212;
-        --text-color: #ccc;
-        --header-background: #0056b3;
-        --header-text: #ddd;
-        --button-background: #1c7430;
-        --button-hover-background: #165c26;
-        --results-background: #1e1e1e;
-        --transaction-highlight: #999;
+        --background-color: #2b2f33; /* Dark shade for background */
+        --text-color: #c5d1c8; /* Soft green text for the dark theme */
+        --header-background: #424a45; /* Dark forest green for header */
+        --header-text: #e2e8df; /* Soft off-white for header text */
+        --button-background: #4a554f; /* Dark green for buttons */
+        --button-hover-background: #3e4a44; /* Even darker green for button hover */
+        --results-background: #3a403d; /* Very dark shade for results background */
+        --transaction-highlight: #525f57; /* Dark muted green for highlights */
       }
       .dark-mode body {
         background-color: var(--background-color);
@@ -151,6 +151,17 @@
         color: var(--transaction-highlight);
       }
 
+      #logoPhoto {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0.2;
+        z-index: -1;
+      }
+
       /* media max */
       @media (max-width: 600px) {
         .search-box {
@@ -171,11 +182,15 @@
           margin: 20px auto;
           display: block;
         }
+        /* #logoPhoto {
+          
+        } */
       }
     </style>
   </head>
   <body>
     <h1>BlockSearch App</h1>
+    <img src="rabbits2.jpg" alt="" id="logoPhoto" />
     <button class="toggle-mode" onclick="toggleDarkMode()">
       Toggle Dark Mode
     </button>
