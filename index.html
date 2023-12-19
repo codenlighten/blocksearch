@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlockSearch App</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        text-align: center;
+        margin: 0;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+
+      h1 {
+        background-color: #007bff;
+        color: white;
+        margin: 0;
+        padding: 20px 0;
+      }
+
+      .container {
+        padding: 20px;
+        max-width: 800px;
+        margin: auto;
+      }
+
+      .search-box {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .search-box input[type="text"],
+      .search-box input[type="number"] {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 200px;
+      }
+
+      .search-box button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #28a745;
+        color: white;
+        cursor: pointer;
+      }
+
+      .search-box button:hover {
+        background-color: #218838;
+      }
+
+      #results {
+        text-align: left;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .transaction {
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+      }
+
+      .transaction:last-child {
+        border-bottom: none;
+      }
+
+      .transaction strong {
+        color: #007bff;
+      }
+
+      .highlights {
+        font-style: italic;
+        color: #6c757d;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>BlockSearch App</h1>
+    <div class="container">
+      <div class="search-box">
+        <input type="text" id="searchQuery" placeholder="Enter search word" />
+        <input type="number" id="limit" placeholder="Limit" />
+        <button id="searchButton">Search</button>
+      </div>
+      <div id="results"></div>
+    </div>
+
+    <script>
+      document
+        .getElementById("searchButton")
+        .addEventListener("click", function () {
+          var query = document.getElementById("searchQuery").value;
+          var limit = document.getElementById("limit").value;
+          fetchData(query, limit);
+        });
+
+      function fetchData(query, limit) {
+        var apiUrl = `https://api.bitails.io/search?q=${query}&limit=${limit}`;
+
+        fetch(apiUrl)
+          .then((response) => response.json())
+          .then((data) => {
+            displayResults(data);
+          })
+          .catch((error) => {
+            console.error("Error fetching data: ", error);
+            alert("Error fetching data.");
+          });
+      }
+
+      function displayResults(data) {
+        var resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = "";
+
+        if (data && data.ops && data.ops.results && data.ops.results.length) {
+          var opsInfo = document.createElement("p");
+          opsInfo.innerHTML = `<strong>Operation Details:</strong> <br>
+                                     From: ${data.ops.from} <br>
+                                     Limit: ${data.ops.limit} <br>
+                                     Total: ${data.ops.total} <br>
+                                     Remaining: ${data.ops.remaining}`;
+          resultsDiv.appendChild(opsInfo);
+
+          var transactionsDiv = document.createElement("div");
+          transactionsDiv.innerHTML = "<strong>Transactions:</strong>";
+          data.ops.results.forEach((item) => {
+            var transactionInfo = document.createElement("div");
+            transactionInfo.classList.add("transaction");
+            transactionInfo.innerHTML = `<strong>Transaction ID:</strong> ${
+              item.txid
+            }, <strong>N:</strong> ${item.n}, <strong>Time:</strong> ${new Date(
+              item.time * 1000
+            ).toLocaleString()}, <strong>Block Height:</strong> ${
+              item.blockheight
+            }, <strong>Size:</strong> ${item.size}`;
+
+            if (item.highlight && item.highlight.length) {
+              var highlights = document.createElement("div");
+              highlights.classList.add("highlights");
+              highlights.innerHTML = `Highlights: ${item.highlight.join(
+                "<br>"
+              )}`;
+              transactionInfo.appendChild(highlights);
+            }
+
+            transactionsDiv.appendChild(transactionInfo);
+          });
+          resultsDiv.appendChild(transactionsDiv);
+        } else {
+          resultsDiv.innerHTML = "<p>No results found</p>";
+        }
+      }
+    </script>
+  </body>
+</html>
