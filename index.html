@@ -200,15 +200,20 @@
         <input type="number" id="limit" placeholder="Limit" />
         <button id="searchButton">Search</button>
       </div>
-      <div id="results"></div>
+      <div id="results">
+        <p id="status"></p>
+      </div>
     </div>
 
     <script>
+      const status = document.getElementById("status");
+      status.innerHTML = "Waiting for query...";
       document
         .getElementById("searchButton")
         .addEventListener("click", function () {
           var query = document.getElementById("searchQuery").value;
           var limit = document.getElementById("limit").value;
+          status.innerHTML = "Searching...";
           fetchData(query, limit);
         });
 
@@ -225,51 +230,52 @@
             alert("Error fetching data.");
           });
       }
-
       function displayResults(data) {
-        var resultsDiv = document.getElementById("results");
-        resultsDiv.innerHTML = "";
-
-        if (data && data.ops && data.ops.results && data.ops.results.length) {
-          var opsInfo = document.createElement("p");
-          opsInfo.innerHTML = `<strong>Operation Details:</strong> <br>
+        setTimeout(() => {
+          var resultsDiv = document.getElementById("results");
+          resultsDiv.innerHTML = "";
+          if (data && data.ops && data.ops.results && data.ops.results.length) {
+            var opsInfo = document.createElement("p");
+            opsInfo.innerHTML = `<strong>Operation Details:</strong> <br>
                                      From: ${data.ops.from} <br>
                                      Limit: ${data.ops.limit} <br>
                                      Total: ${data.ops.total} <br>
                                      Remaining: ${data.ops.remaining}`;
-          resultsDiv.appendChild(opsInfo);
+            resultsDiv.appendChild(opsInfo);
 
-          var transactionsDiv = document.createElement("div");
-          transactionsDiv.innerHTML = "<strong>Transactions:</strong>";
-          data.ops.results.forEach((item) => {
-            var transactionInfo = document.createElement("div");
-            transactionInfo.classList.add("transaction");
-            transactionInfo.innerHTML = `<strong>Transaction ID:</strong> ${
-              item.txid
-            }, <strong>N:</strong> ${item.n}, <strong>Time:</strong> ${new Date(
-              item.time * 1000
-            ).toLocaleString()}, <strong>Block Height:</strong> ${
-              item.blockheight
-            }, <strong>Size:</strong> ${item.size}`;
+            var transactionsDiv = document.createElement("div");
+            transactionsDiv.innerHTML = "<strong>Transactions:</strong>";
+            data.ops.results.forEach((item) => {
+              var transactionInfo = document.createElement("div");
+              transactionInfo.classList.add("transaction");
+              transactionInfo.innerHTML = `<strong>Transaction ID:</strong> ${
+                item.txid
+              }, <strong>N:</strong> ${
+                item.n
+              }, <strong>Time:</strong> ${new Date(
+                item.time * 1000
+              ).toLocaleString()}, <strong>Block Height:</strong> ${
+                item.blockheight
+              }, <strong>Size:</strong> ${item.size}`;
 
-            if (item.highlight && item.highlight.length) {
-              var highlights = document.createElement("div");
-              highlights.classList.add("highlights");
-              highlights.innerHTML = `Highlights: ${item.highlight.join(
-                "<br>"
-              )}`;
-              transactionInfo.appendChild(highlights);
-            }
-
-            transactionsDiv.appendChild(transactionInfo);
-          });
-          resultsDiv.appendChild(transactionsDiv);
-          //   logophoto redisplay to fit the entire height of the page
-          document.getElementById("logoPhoto").style.height =
-            document.body.scrollHeight + "px";
-        } else {
-          resultsDiv.innerHTML = "<p>No results found</p>";
-        }
+              if (item.highlight && item.highlight.length) {
+                var highlights = document.createElement("div");
+                highlights.classList.add("highlights");
+                highlights.innerHTML = `Highlights: ${item.highlight.join(
+                  "<br>"
+                )}`;
+                transactionInfo.appendChild(highlights);
+              }
+              transactionsDiv.appendChild(transactionInfo);
+            });
+            status.innerHTML = "";
+            resultsDiv.appendChild(transactionsDiv);
+            document.getElementById("logoPhoto").style.height =
+              document.body.scrollHeight + "px";
+          } else {
+            resultsDiv.innerHTML = "<p>No results found</p>";
+          }
+        }, 1500);
       }
       function toggleDarkMode() {
         document.body.classList.toggle("dark-mode");
