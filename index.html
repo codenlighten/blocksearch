@@ -264,6 +264,9 @@
             transactionsDiv.appendChild(transactionInfo);
           });
           resultsDiv.appendChild(transactionsDiv);
+          //   logophoto redisplay to fit the entire height of the page
+          document.getElementById("logoPhoto").style.height =
+            document.body.scrollHeight + "px";
         } else {
           resultsDiv.innerHTML = "<p>No results found</p>";
         }
