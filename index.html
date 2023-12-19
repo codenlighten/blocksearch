@@ -219,6 +219,18 @@
         .addEventListener("click", function () {
           var query = document.getElementById("searchQuery").value;
           var limit = document.getElementById("limit").value;
+          if (!limit) {
+            limit = 100;
+          }
+          //   if above 10000 return error
+          if (limit > 10000) {
+            alert("Limit cannot be more than 10000");
+            return;
+          }
+          if (!query) {
+            alert("Please enter a search query");
+            return;
+          }
           status.innerHTML = "Searching...";
           fetchData(query, limit);
         });
