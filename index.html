@@ -170,6 +170,11 @@
         z-index: -1;
       }
 
+      #copyright {
+        margin-top: 20px;
+        text-align: center;
+      }
+
       /* media max */
       @media (max-width: 600px) {
         .search-box {
@@ -208,7 +213,12 @@
       </div>
       <div id="results"><p id="status"></p></div>
     </div>
-
+    <div class="container" id="copyright">
+      <p>
+        Made with ❤️ by
+        <a href="https://twitter.com/codenlighten1">CodenLighten</a>
+      </p>
+    </div>
     <script>
       const status = document.getElementById("status");
       status.innerHTML = "Waiting for query...";
