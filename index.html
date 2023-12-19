@@ -33,6 +33,8 @@
         margin: auto;
         padding: 20px;
         transition: background-color 0.3s, color 0.3s;
+        /* text shadow */
+        text-shadow: 2px 2px 4px #000000;
       }
       .container {
         padding: 20px;
@@ -188,13 +190,11 @@
           margin: 20px auto;
           display: block;
         }
-        /* #logoPhoto {
-          
-        } */
       }
     </style>
   </head>
   <body>
+    <!-- favicon -->
     <h1>BlockSearch</h1>
     <img src="rabbits2.jpg" alt="" id="logoPhoto" />
     <button class="toggle-mode" onclick="toggleDarkMode()">
@@ -206,9 +206,7 @@
         <input type="number" id="limit" placeholder="Limit" />
         <button id="searchButton">Search</button>
       </div>
-      <div id="results">
-        <p id="status"></p>
-      </div>
+      <div id="results"><p id="status"></p></div>
     </div>
 
     <script>
