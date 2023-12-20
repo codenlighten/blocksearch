@@ -276,9 +276,9 @@
               var transactionInfo = document.createElement("div");
               transactionInfo.classList.add("transaction");
               transactionInfo.innerHTML = `<strong>Transaction ID:</strong>
-              <a href="https://whatsonchain.com/tx/${
+              <a href="https://bitails.io/tx/${item.txid}" target="_blank">${
                 item.txid
-              }" target="_blank">${item.txid}</a>
+              }</a>
                 , <strong>N:</strong> ${
                   item.n
                 }, <strong>Time:</strong> ${new Date(
@@ -286,7 +286,6 @@
               ).toLocaleString()}, <strong>Block Height:</strong> ${
                 item.blockheight
               }, <strong>Size:</strong> ${item.size}`;
-
               if (item.highlight && item.highlight.length) {
                 var highlights = document.createElement("div");
                 highlights.classList.add("highlights");
