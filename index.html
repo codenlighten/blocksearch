@@ -275,11 +275,13 @@
             data.ops.results.forEach((item) => {
               var transactionInfo = document.createElement("div");
               transactionInfo.classList.add("transaction");
-              transactionInfo.innerHTML = `<strong>Transaction ID:</strong> ${
+              transactionInfo.innerHTML = `<strong>Transaction ID:</strong>
+              <a href="https://whatsonchain.com/tx/${
                 item.txid
-              }, <strong>N:</strong> ${
-                item.n
-              }, <strong>Time:</strong> ${new Date(
+              }" target="_blank">${item.txid}</a>
+                , <strong>N:</strong> ${
+                  item.n
+                }, <strong>Time:</strong> ${new Date(
                 item.time * 1000
               ).toLocaleString()}, <strong>Block Height:</strong> ${
                 item.blockheight
