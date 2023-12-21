@@ -217,6 +217,8 @@
       <div id="currentMempoolTxs">
         <p id="connectionStatus"></p>
         <p id="mempoolTxs"></p>
+        <p id="totaltxs"></p>
+        <p id="total"></p>
         <p id="singleSat"></p>
         <p id="zeroSat"></p>
       </div>
@@ -325,6 +327,8 @@
       let satCount = 0;
       const zeroSatHtml = document.getElementById("zeroSat");
       let zeroSatCount = 0;
+      let totaltxs = 0;
+      let totalOuputs = 0;
 
       // show if disconnected
 
@@ -335,7 +339,10 @@
         ).innerHTML = `Connected to the <a href="https://bitails.io/" target="_blank">BitAils</a> API via Socket.io`;
         mempoolTxs.innerHTML = "";
         mempoolTxs.innerHTML = `<strong>Current Mempool Transactions:</strong> ${data.txid}`;
-
+        totaltxs++;
+        document.getElementById(
+          "totaltxs"
+        ).innerHTML = `<strong>Total Transactions:</strong> ${totaltxs}`;
         data.outputs.forEach((output) => {
           console.log(output.satoshis);
           if (output.satoshis === 1) {
@@ -345,6 +352,10 @@
             zeroSatCount++;
             zeroSatHtml.innerHTML = `<strong>Zero Satoshis:</strong> ${zeroSatCount} <br> <strong>Transaction ID:</strong> ${data.txid}`;
           }
+          totalOuputs++;
+          document.getElementById(
+            "total"
+          ).innerHTML = `<strong>Total Transactions Outputs:</strong> ${total}`;
         });
       });
     </script>
