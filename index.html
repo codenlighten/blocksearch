@@ -330,7 +330,7 @@
                                       ).toLocaleString()}`;
 
         const ouputs = data.outputs;
-        const singleSat = ouputs.filter((output) => output.value === 1);
+        const singleSat = ouputs.filter((output) => output.satoshis === 1);
         const singleSatDiv = document.createElement("div");
         singleSatDiv.innerHTML = `<strong>Single Sat Outputs:</strong> <br>
                                      Count: ${singleSat.length} <br>
