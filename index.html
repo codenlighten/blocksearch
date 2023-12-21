@@ -215,6 +215,7 @@
       </div>
       <div id="results"><p id="status"></p></div>
       <div id="currentMempoolTxs">
+        <p id="connectionStatus"></p>
         <p id="mempoolTxs"></p>
         <p id="singleSat"></p>
         <p id="zeroSat"></p>
@@ -324,8 +325,13 @@
       let satCount = 0;
       const zeroSatHtml = document.getElementById("zeroSat");
       let zeroSatCount = 0;
+
+      // show if disconnected
+
       socket.on("tx", (data) => {
         // console.log(data);
+        document.getElementById("connectionStatus").innerHTML =
+          "Connected to the BitAils API";
         mempoolTxs.innerHTML = "";
         mempoolTxs.innerHTML = `<strong>Current Mempool Transactions:</strong> ${data.txid}`;
 
