@@ -215,7 +215,9 @@
       </div>
       <div id="results"><p id="status"></p></div>
       <div id="currentMempoolTxs">
-        <p mempool="status"></p>
+        <p id="mempoolTxs"></p>
+        <p id="singleSat"></p>
+        <p id="zeroSat"></p>
       </div>
     </div>
     <div class="container" id="copyright">
@@ -318,24 +320,25 @@
       const socket = io(endpoint, { transports: ["websocket"] });
       socket.connect();
       const singleSatHtml = document.getElementById("singleSat");
+      const mempoolTxs = document.getElementById("mempoolTxs");
       let satCount = 0;
+      const zeroSatHtml = document.getElementById("zeroSat");
+      let zeroSatCount = 0;
       socket.on("tx", (data) => {
-        console.log(data);
-        var currentMempoolTxs = document.getElementById("currentMempoolTxs");
-        currentMempoolTxs.innerHTML = "";
-        var mempoolInfo = document.createElement("p");
-        mempoolInfo.innerHTML = `<strong>Current Mempool Transactions:</strong> <br>
-                                     TXID: ${data.txid} <br>
-                                     Size: ${data.size} <br>
-                                      Time: ${new Date(
-                                        data.time * 1000
-                                      ).toLocaleString()}`;
+        // console.log(data);
+        mempoolTxs.innerHTML = "";
+        mempoolTxs.innerHTML = `<strong>Current Mempool Transactions:</strong> ${data.txid}`;
 
-        const ouputs = data.outputs;
-        const singleSat = ouputs.filter((output) => output.satoshis === 1);
-        satCount = satCount + singleSat.length;
-        singleSatHtml.innerHTML = `1 sat transactions: ${satCount}`;
-        currentMempoolTxs.appendChild(mempoolInfo);
+        data.outputs.forEach((output) => {
+          console.log(output.satoshis);
+          if (output.satoshis === 1) {
+            satCount++;
+            singleSatHtml.innerHTML = `<strong>Single Satoshis:</strong> ${satCount} <br> <strong>Transaction ID:</strong> ${data.txid}`;
+          } else if (output.satoshis === 0) {
+            zeroSatCount++;
+            zeroSatHtml.innerHTML = `<strong>Zero Satoshis:</strong> ${zeroSatCount} <br> <strong>Transaction ID:</strong> ${data.txid}`;
+          }
+        });
       });
     </script>
   </body>
