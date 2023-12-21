@@ -317,6 +317,8 @@
       const endpoint = "https://api.bitails.io/global";
       const socket = io(endpoint, { transports: ["websocket"] });
       socket.connect();
+      const singleSatHtml = document.getElementById("singleSat");
+      let satCount = 0;
       socket.on("tx", (data) => {
         console.log(data);
         var currentMempoolTxs = document.getElementById("currentMempoolTxs");
@@ -331,11 +333,8 @@
 
         const ouputs = data.outputs;
         const singleSat = ouputs.filter((output) => output.satoshis === 1);
-        const singleSatDiv = document.createElement("div");
-        singleSatDiv.innerHTML = `<strong>Single Sat Outputs:</strong> <br>
-                                     Count: ${singleSat.length} <br>
-                                     Total: ${singleSat.length} <br>`;
-        currentMempoolTxs.appendChild(singleSatDiv);
+        satCount = satCount + singleSat.length;
+        singleSatHtml.innerHTML = `1 sat transactions: ${satCount}`;
         currentMempoolTxs.appendChild(mempoolInfo);
       });
     </script>
