@@ -246,7 +246,7 @@
         <p id="zeroSat"></p>
       </div>
     </div>
-    <div class="container" id="currentBlockHeight">
+    <!-- <div class="container" id="currentBlockHeight">
       <p>
         <strong>Current Block Height:</strong>
         <span id="height"></span>
@@ -266,7 +266,7 @@
           <span id="minutes"></span> Minutes <span id="seconds"></span> Seconds
         </p>
       </div>
-    </div>
+    </div> -->
     <div class="container" id="copyright">
       <p>
         Made with ❤️ by
@@ -275,6 +275,63 @@
       </p>
     </div>
     <script>
+      const bitailsInfo = async () => {
+        try {
+          const response = await fetch("https://api.bitails.io/block/latest");
+          const json = await response.json();
+          console.log(json);
+          document.getElementById("height").innerHTML = json.height;
+          document.getElementById("hash").innerHTML = json.hash;
+          document.getElementById("averageFee").innerHTML = json.averageFee;
+
+          return {
+            height: json.height,
+            hash: json.hash,
+            averageFee: json.averageFee,
+          };
+        } catch (err) {
+          console.log(err);
+        }
+      };
+
+      // const halvingHeight = 840000;
+      // const halvingInterval = 210000; // number of blocks between halvings
+      // const blockTime = 10 * 60 * 1000; // average block time in milliseconds (10 minutes here)
+
+      // const countdownToHalving = async () => {
+      //   const { height, hash, averageFee } = await bitailsInfo();
+      //   const blocksToHalving = halvingHeight - height;
+      //   const timeToHalving = blocksToHalving * blockTime;
+      //   let days = Math.floor(timeToHalving / (1000 * 60 * 60 * 24));
+      //   let hours = Math.floor(
+      //     (timeToHalving % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      //   );
+      //   let minutes = Math.floor(
+      //     (timeToHalving % (1000 * 60 * 60)) / (1000 * 60)
+      //   );
+      //   let seconds = Math.floor((timeToHalving % (1000 * 60)) / 1000);
+
+      //   setInterval(() => {
+      //     if (seconds === 0) {
+      //       seconds = 60;
+      //       minutes--;
+      //     }
+      //     if (minutes === 0) {
+      //       minutes = 60;
+      //       hours--;
+      //     }
+      //     if (hours === 0) {
+      //       hours = 24;
+      //       days--;
+      //     }
+      //     seconds--;
+      //     document.getElementById("days").innerHTML = days;
+      //     document.getElementById("hours").innerHTML = hours;
+      //     document.getElementById("minutes").innerHTML = minutes;
+      //     document.getElementById("seconds").innerHTML = seconds;
+      //   }, 1000);
+      // };
+      // countdownToHalving();
       const status = document.getElementById("status");
       status.innerHTML = "Waiting for query...";
       document
@@ -402,64 +459,6 @@
           ).innerHTML = `<strong>Total Transactions Outputs:</strong> ${totalOuputs}`;
         });
       });
-      const bitailsInfo = async () => {
-        try {
-          const response = await fetch("https://api.bitails.io/block/latest");
-          const json = await response.json();
-          console.log(json);
-          document.getElementById("height").innerHTML = json.height;
-          document.getElementById("hash").innerHTML = json.hash;
-          document.getElementById("averageFee").innerHTML = json.averageFee;
-
-          return {
-            height: json.height,
-            hash: json.hash,
-            averageFee: json.averageFee,
-          };
-        } catch (err) {
-          console.log(err);
-        }
-      };
-
-      const halvingHeight = 840000;
-      const halvingInterval = 210000; // number of blocks between halvings
-      const blockTime = 10 * 60 * 1000; // average block time in milliseconds (10 minutes here)
-
-      const countdownToHalving = async () => {
-        const { height, hash, averageFee } = await bitailsInfo();
-        const blocksToHalving = halvingHeight - height;
-        const timeToHalving = blocksToHalving * blockTime;
-        let days = Math.floor(timeToHalving / (1000 * 60 * 60 * 24));
-        let hours = Math.floor(
-          (timeToHalving % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        );
-        let minutes = Math.floor(
-          (timeToHalving % (1000 * 60 * 60)) / (1000 * 60)
-        );
-        let seconds = Math.floor((timeToHalving % (1000 * 60)) / 1000);
-
-        setInterval(() => {
-          if (seconds === 0) {
-            seconds = 60;
-            minutes--;
-          }
-          if (minutes === 0) {
-            minutes = 60;
-            hours--;
-          }
-          if (hours === 0) {
-            hours = 24;
-            days--;
-          }
-          seconds--;
-          document.getElementById("days").innerHTML = days;
-          document.getElementById("hours").innerHTML = hours;
-          document.getElementById("minutes").innerHTML = minutes;
-          document.getElementById("seconds").innerHTML = seconds;
-        }, 1000);
-      };
-      //on load
-      countdownToHalving();
     </script>
   </body>
 </html>
