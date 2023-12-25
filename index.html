@@ -204,8 +204,13 @@
       #status {
         font-weight: bold;
       }
+      .radioButtons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
 
-      /* media max */
       @media (max-width: 600px) {
         .search-box {
           flex-direction: column;
@@ -240,8 +245,17 @@
         <input type="text" id="searchQuery" placeholder="Enter search word" />
         <input type="number" id="limit" placeholder="Limit" />
         <button id="searchButton">Search</button>
-        <p id="status"></p>
       </div>
+      <!-- <div class="radioButtons">
+        <input type="radio" id="term" name="searchType" value="term" checked />
+        <label for="term">Term</label>
+        <input type="radio" id="address" name="searchType" value="address" />
+        <label for="address">Address</label>
+        <input type="radio" id="txid" name="searchType" value="txid" />
+        <label for="txid">Txid</label>
+      </div> -->
+      <p id="status"></p>
+
       <div id="results"></div>
       <div id="currentMempoolTxs">
         <p id="connectionStatus"></p>
@@ -396,7 +410,10 @@
                            Total: ${data.ops.total} <br>
                            Remaining: ${data.ops.remaining}`;
             resultsDiv.appendChild(opsInfo);
-
+            //put results in time order
+            data.ops.results.sort((a, b) => {
+              return b.time - a.time;
+            });
             var transactionsDiv = document.createElement("div");
             transactionsDiv.innerHTML = "<strong>Transactions:</strong>";
             data.ops.results.forEach((item) => {
