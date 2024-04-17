@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BSV Mempool Listener</title>
+    <style>
+      body {
+        font-family: "Montserrat";
+      }
+      h1 {
+        color: #ff5400;
+      }
+      input {
+        padding: 10px;
+        margin: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+      button {
+        padding: 10px;
+        margin: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #ff5400;
+        color: white;
+      }
+      button:hover {
+        background-color: #ff5400;
+        color: white;
+      }
+      #messages {
+        padding: 10px;
+        margin: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+      }
+      #messages div {
+        padding: 10px;
+        margin: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>BSV Mempool Listener</h1>
+    <input
+      type="text"
+      id="subscription"
+      placeholder="Enter term to listen for"
+    />
+    <button onclick="subscribe()">Subscribe</button>
+    <button onclick="mem()">Connect to Mempool</button>
+    <!-- clear messages -->
+    <button onclick="document.getElementById('messages').innerHTML = '';">
+      Clear Messages
+    </button>
+    <!--  -->
+    <div id="messages" style="display: none">
+      <p id="status"></p>
+    </div>
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/bsv@1.5.0/bsv.min.js"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"
+      integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/gh/centrifugal/centrifuge-js@2.X.X/dist/centrifuge.min.js"></script>
+    <script>
+      const Buffer = bsv.deps.Buffer;
+      const toHex = (string) => {
+        return Buffer.from(string).toString("hex");
+      };
+      const hexConvert = (hexString) => {
+        let str = "";
+        for (let n = 0; n < hexString.length; n += 2) {
+          str += String.fromCharCode(parseInt(hexString.substr(n, 2), 16));
+        }
+        return str;
+      };
+      var subscriptions = [];
+      let subscribe = () => {
+        document.getElementById("messages").innerHTML = "";
+        document.getElementById("messages").style.display = "block";
+
+        let subscription = document.getElementById("subscription").value;
+        subscriptions.push(subscription);
+        localStorage.subscriptions = JSON.stringify(subscriptions);
+        console.log("Subscribed to: " + subscription);
+
+        getMem(subscription);
+      };
+
+      const mem = () => {
+        const centrifuge = new Centrifuge(
+          "wss://socket.whatsonchain.com/mempool"
+        );
+        centrifuge.on("connect", function (ctx) {
+          console.log(
+            "Connected with client ID " + ctx.client + " over " + ctx.transport
+          );
+        });
+        centrifuge.connect();
+      };
+
+      const getMem = (phrase) => {
+        const centrifuge = new Centrifuge(
+          "wss://socket.whatsonchain.com/mempool"
+        );
+
+        centrifuge.on("publish", function (message) {
+          console.log("Transaction: ", message.data);
+          let dataOutputs = message.data.vout;
+          let hex = message.data.hex;
+          let phraseHex = toHex(phrase);
+
+          dataOutputs.forEach((output) => {
+            if (output.scriptPubKey.hex.includes(phraseHex)) {
+              const script = new bsv.Script(output.scriptPubKey.hex);
+              console.log(hex, script.toASM());
+              let asm = script.toASM();
+              //remove first 2 indexes
+              let asmArray = asm.split(" ");
+              asmArray.splice(0, 2);
+              const converted = [];
+              asmArray.forEach((hex) => {
+                converted.push(hexConvert(hex));
+              });
+              console.log("Match found in transaction:", message.data.txid);
+              displayMessage(
+                message.data.txid,
+                output.scriptPubKey.hex,
+                converted
+              );
+            }
+          });
+        });
+        centrifuge.connect();
+      };
+
+      const displayMessage = (txid, data, hexConvertedArray) => {
+        const messageList = document.getElementById("messages");
+        const messageItem = document.createElement("div");
+        const hexDiv = document.createElement("div");
+        hexConvertedArray.forEach((hex) => {
+          const hexItem = document.createElement("div");
+          hexItem.innerHTML = hex;
+          hexDiv.appendChild(hexItem);
+        });
+        // messageItem.innerHTML = `<strong>Transaction ID:</strong> ${txid} <br> <strong>Data:</strong> ${data}`;
+        messageItem.innerHTML = `<strong>Transaction ID:</strong> ${txid}`;
+        messageList.appendChild(messageItem);
+        messageList.appendChild(hexDiv);
+      };
+    </script>
+  </body>
+</html>
