@@ -72,6 +72,10 @@
         text-align: center;
         padding: 10px 0;
       }
+      #status {
+        text-align: center;
+        margin-bottom: 10px;
+      }
 
       /* Responsive adjustments */
       @media (max-width: 768px) {
@@ -100,6 +104,7 @@
   </head>
   <body>
     <h1>BSV Mempool Listener</h1>
+    <p id="status"></p>
     <input
       type="text"
       id="subscription"
@@ -142,7 +147,8 @@
       let subscribe = () => {
         document.getElementById("messages").innerHTML = "";
         // document.getElementById("messages").style.display = "block";
-
+        document.getElementById("status").innerHTML =
+          "listening for: " + document.getElementById("subscription").value;
         let subscription = document.getElementById("subscription").value;
         subscriptions.push(subscription);
         localStorage.subscriptions = JSON.stringify(subscriptions);
