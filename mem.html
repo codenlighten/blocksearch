@@ -24,8 +24,9 @@
         border-radius: 5px;
         border: 1px solid #ddd;
         width: calc(
-          100% - 44px
-        ); /* adjusts width to account for padding and border */
+          100% - 22px
+        ); /* Properly adjusts width to account for padding */
+        display: block; /* Ensures input and button width is consistent */
       }
       input {
         background-color: #fff;
@@ -35,7 +36,7 @@
         background-color: #ff5400;
         color: white;
         cursor: pointer;
-        transition: background 0.3s;
+        transition: background-color 0.3s;
       }
       button:hover {
         background-color: #e04e00;
@@ -50,6 +51,7 @@
         height: 300px;
         overflow-y: auto;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        word-wrap: break-word;
       }
       #messages div {
         background-color: #f9f9f9;
@@ -57,6 +59,7 @@
         padding: 10px;
         margin: 10px 0;
         border-radius: 5px;
+        word-wrap: break-word;
       }
 
       #copyright2024GregoryWard {
@@ -69,6 +72,30 @@
         text-align: center;
         padding: 10px 0;
       }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+        h1 {
+          font-size: 1.5rem;
+        }
+        input,
+        button {
+          padding: 5px;
+          margin: 5px 0;
+          width: calc(100% - 10px); /* Adjust width for smaller padding */
+        }
+        #messages {
+          margin-top: 10px;
+          height: 200px;
+        }
+        #messages div {
+          padding: 5px;
+          margin: 5px 0;
+        }
+      }
     </style>
   </head>
   <body>
@@ -80,15 +107,10 @@
     />
     <button onclick="subscribe()">Subscribe</button>
     <button onclick="mem()">Connect to Mempool</button>
-    <button
-      onclick="document.getElementById('messages').innerHTML = ''; document.getElementById('messages').style.display = 'none';"
-    >
-      Clear Messages
-    </button>
+    <button onclick="clearMessages()">Clear Messages</button>
     <div id="messages"></div>
-    <div id="copyright2024GregoryWard">
-      <p>&copy; 2024 Gregory Ward. All rights reserved.</p>
-    </div>
+
+    <div id="copyright2024GregoryWard">Copyright © 2024 Gregory Ward</div>
     <script
       type="text/javascript"
       src="https://unpkg.com/bsv@1.5.0/bsv.min.js"
@@ -105,6 +127,10 @@
       const toHex = (string) => {
         return Buffer.from(string).toString("hex");
       };
+      function clearMessages() {
+        document.getElementById("messages").innerHTML = "";
+      }
+
       const hexConvert = (hexString) => {
         let str = "";
         for (let n = 0; n < hexString.length; n += 2) {
@@ -115,7 +141,7 @@
       var subscriptions = [];
       let subscribe = () => {
         document.getElementById("messages").innerHTML = "";
-        document.getElementById("messages").style.display = "block";
+        // document.getElementById("messages").style.display = "block";
 
         let subscription = document.getElementById("subscription").value;
         subscriptions.push(subscription);
@@ -160,6 +186,7 @@
               asmArray.forEach((hex) => {
                 converted.push(hexConvert(hex));
               });
+              //   alert("found");
               console.log("Match found in transaction:", message.data.txid);
               displayMessage(
                 message.data.txid,
