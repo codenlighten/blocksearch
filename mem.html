@@ -6,42 +6,68 @@
     <title>BSV Mempool Listener</title>
     <style>
       body {
-        font-family: "Montserrat";
+        font-family: "Montserrat", sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 20px;
       }
       h1 {
         color: #ff5400;
+        text-align: center;
+        margin-bottom: 20px;
       }
-      input {
-        padding: 10px;
-        margin: 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-      }
+      input,
       button {
         padding: 10px;
-        margin: 10px;
+        margin: 10px 0;
         border-radius: 5px;
-        border: 1px solid #ccc;
+        border: 1px solid #ddd;
+        width: calc(
+          100% - 44px
+        ); /* adjusts width to account for padding and border */
+      }
+      input {
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      button {
         background-color: #ff5400;
         color: white;
+        cursor: pointer;
+        transition: background 0.3s;
       }
       button:hover {
-        background-color: #ff5400;
-        color: white;
+        background-color: #e04e00;
       }
       #messages {
+        display: block;
         padding: 10px;
-        margin: 10px;
+        margin-top: 20px;
+        background-color: #fff;
         border-radius: 5px;
         border: 1px solid #ccc;
-        background-color: #f9f9f9;
+        height: 300px;
+        overflow-y: auto;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       }
       #messages div {
+        background-color: #f9f9f9;
+        border: 1px solid #e1e1e1;
         padding: 10px;
-        margin: 10px;
+        margin: 10px 0;
         border-radius: 5px;
-        border: 1px solid #ccc;
-        background-color: #fff;
+      }
+
+      #copyright2024GregoryWard {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
       }
     </style>
   </head>
@@ -54,13 +80,14 @@
     />
     <button onclick="subscribe()">Subscribe</button>
     <button onclick="mem()">Connect to Mempool</button>
-    <!-- clear messages -->
-    <button onclick="document.getElementById('messages').innerHTML = '';">
+    <button
+      onclick="document.getElementById('messages').innerHTML = ''; document.getElementById('messages').style.display = 'none';"
+    >
       Clear Messages
     </button>
-    <!--  -->
-    <div id="messages" style="display: none">
-      <p id="status"></p>
+    <div id="messages"></div>
+    <div id="copyright2024GregoryWard">
+      <p>&copy; 2024 Gregory Ward. All rights reserved.</p>
     </div>
     <script
       type="text/javascript"
